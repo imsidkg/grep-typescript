@@ -6,7 +6,10 @@
     "dev": "bun run app/main.ts"
   },
   "dependencies": {
-    "fs-extra": "^11.2.0"
+    "@types/bun": "^1.1.6",
+    "bun": "^1.1.24",
+    "fs-extra": "^11.2.0",
+    "typescript": "^5.5.4"
   },
   "devDependencies": {
     "@types/node": "^20.12.12"
