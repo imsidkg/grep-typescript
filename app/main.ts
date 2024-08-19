@@ -11,7 +11,7 @@ function matchPattern(inputLine: string, pattern: string): boolean {
     return /\d/g.test(inputLine)
   }
   else if(pattern == "\\w") {
-     return /\d/g.test(inputLine)
+     return /\w/g.test(inputLine)
   }
   else if(pattern.startsWith('[') && pattern.endsWith(']')) {
      let chars = pattern.slice(0,pattern.length-1);
