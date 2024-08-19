@@ -22,10 +22,10 @@ function matchPattern(inputLine: string, pattern: string): boolean {
     let chars = pattern.slice(2, pattern.length - 1); 
     
     
-    if (Array.from(inputLine).some((char) => chars.includes(char))) {
-      return false;
-    } else {
+    if (Array.from(inputLine).some((char) => !chars.includes(char))) {
       return true;
+    } else {
+      return false;
     }
   }
   else {
