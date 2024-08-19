@@ -17,14 +17,16 @@ function matchPattern(inputLine: string, pattern: string): boolean {
      let chars = pattern.slice(0,pattern.length-1);
      return Array.from(chars).some((char) => inputLine.includes(char))
   }
-  else if(pattern[0]=="[" && pattern[pattern.length-1]=="]" &&  pattern[1]=="^") {
-     let chars = pattern.slice(1,pattern.length-1);
-     if( Array.from(inputLine).some((char) => chars.includes(char))) {
-      return false
-     }
-     else {
-      return true
-     }
+  else if (pattern[0] == "[" && pattern[pattern.length - 1] == "]" && pattern[1] == "^") {
+    
+    let chars = pattern.slice(2, pattern.length - 1); 
+    
+    
+    if (Array.from(inputLine).some((char) => chars.includes(char))) {
+      return false;
+    } else {
+      return true;
+    }
   }
   else {
     throw new Error(`Unhandled pattern: ${pattern}`);
