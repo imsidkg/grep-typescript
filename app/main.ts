@@ -8,10 +8,13 @@ function matchPattern(inputLine: string, pattern: string): boolean {
     return inputLine.includes(pattern);
   }
   else if(pattern === "\\d"){
-    return /\d/g.test(inputLine);
+    return /\d/g.test(inputLine)
   }
   else if(pattern == "\\w") {
-    return /\w/g.test(inputLine)
+     return /\d/g.test(inputLine)
+  }
+  else if(pattern == "\[abc]") {
+     return /\d/g.test(inputLine)
   }
   else {
     throw new Error(`Unhandled pattern: ${pattern}`);
