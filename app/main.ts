@@ -14,7 +14,7 @@ function matchPattern(inputLine: string, pattern: string): boolean {
      return /\d/g.test(inputLine)
   }
   else if(pattern.startsWith('[') && pattern.endsWith(']')) {
-     const chars = pattern.slice(0,pattern.length-1);
+     let chars = pattern.slice(0,pattern.length-1);
      return Array.from(chars).some((char) => inputLine.includes(char))
   }
   else {
