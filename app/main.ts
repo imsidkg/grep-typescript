@@ -20,10 +20,10 @@ function matchPattern(inputLine: string, pattern: string): boolean {
   else if(pattern.startsWith('[') && pattern.endsWith(']') && pattern[1] === '^') {
      let chars = pattern.slice(0,pattern.length-1);
      if( Array.from(chars).some((char) => inputLine.includes(char))) {
-      return false
+      return true
      }
      else {
-      return true
+      return false
      }
   }
   else {
