@@ -19,7 +19,7 @@ function matchPattern(inputLine: string, pattern: string): boolean {
   }
   else if(pattern[0]=="[" && pattern[pattern.length-1]=="]" &&  pattern[1]=="^") {
      let chars = pattern.slice(2,pattern.length-1);
-     if( Array.from(chars).some((char) => inputLine.includes(char))) {
+     if( Array.from(inputLine).some((char) => chars.includes(char))) {
       return false
      }
      else {
