@@ -17,13 +17,13 @@ function matchPattern(inputLine: string, pattern: string): boolean {
      let chars = pattern.slice(0,pattern.length-1);
      return Array.from(chars).some((char) => inputLine.includes(char))
   }
-  else if(pattern.startsWith('[') && pattern.endsWith(']') && pattern[1] === '^') {
+  else if(pattern[0]=="[" && pattern[pattern.length-1]=="]" &&  pattern[1]=="^") {
      let chars = pattern.slice(0,pattern.length-1);
      if( Array.from(chars).some((char) => inputLine.includes(char))) {
-      return true
+      return false
      }
      else {
-      return false
+      return true
      }
   }
   else {
