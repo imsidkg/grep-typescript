@@ -13,8 +13,9 @@ function matchPattern(inputLine: string, pattern: string): boolean {
   else if(pattern == "\\w") {
      return /\d/g.test(inputLine)
   }
-  else if(pattern == "\[abc]") {
-     return /\d/g.test(inputLine)
+  else if(pattern.startsWith('[') && pattern.endsWith(']')) {
+     const chars = pattern.slice(0,pattern.length-1);
+     return Array.from(chars).some((char) => inputLine.includes(char))
   }
   else {
     throw new Error(`Unhandled pattern: ${pattern}`);
