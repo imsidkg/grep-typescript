@@ -6,7 +6,11 @@ const pattern = args[3];
 function matchPattern(inputLine: string, pattern: string): boolean {
   if (pattern.length === 1) {
     return inputLine.includes(pattern);
-  } else {
+  }
+  else if(pattern === '//d'){
+    return /\d/g.test(inputLine)
+  }
+  else {
     throw new Error(`Unhandled pattern: ${pattern}`);
   }
 }
