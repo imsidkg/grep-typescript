@@ -18,15 +18,16 @@ function matchPattern(inputLine: string, pattern: string): boolean {
      return Array.from(chars).some((char) => inputLine.includes(char))
   }
   else if (pattern[0] == "[" && pattern[pattern.length - 1] == "]" && pattern[1] == "^") {
-    
-    let chars = pattern.slice(2, pattern.length - 1); 
-    
-    
-    if (Array.from(inputLine).some((char) => !chars.includes(char))) {
-      return true;
-    } else {
-      return false;
+    // Create a set of the characters in the negative character group
+    let chars = new Set(pattern.slice(2, pattern.length - 1)); // Start after "^" and end before "]"
+  
+    // Check if any character in inputLine is in the negative character group
+    for (let x = 0; x < inputLine.length; x++) {
+      if (chars.has(inputLine[x])) {
+        return false; // If any character is in the group, it's not a match
+      }
     }
+    return true; // If no characters are in the group, it's a match
   }
   else {
     throw new Error(`Unhandled pattern: ${pattern}`);
