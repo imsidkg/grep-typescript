@@ -8,32 +8,50 @@ function matchPattern(inputLine: string, pattern: string): boolean {
   
   while (i < inputLine.length && j < pattern.length) {
     const currentPatternChar = pattern[j];
-    console.log('reached 1')
+    console.log(`Checking pattern character: ${currentPatternChar}, input character: ${inputLine[i]}`);
 
     if (currentPatternChar === '\\') {
-      console.log('reached 2')
       const nextPatternChar = pattern[j + 1];
 
       if (nextPatternChar === 'd') {
-        console.log('reached 3')
+        console.log('Matching digit...');
         if (!/\d/.test(inputLine[i])) return false;
-        j += 2; // Move past the \ and the d in the pattern
+        j += 2; // Move past \ and d
       } else if (nextPatternChar === 'w') {
-        console.log('reached 4')
+        console.log('Matching word character...');
         if (!/\w/.test(inputLine[i])) return false;
-        j += 2; // Move past the \ and the w in the pattern
+        j += 2; // Move past \ and w
       }
     } else {
-      console.log('reached 5')
+      console.log(`Matching literal character: ${currentPatternChar}`);
       if (currentPatternChar !== inputLine[i]) return false;
       j += 1; // Move to the next character in the pattern
     }
-    i += 1; // Always move to the next character in the input line
+    i += 1; // Move to the next character in the input line
   }
 
-  // Pattern needs to be completely matched
+  // Pattern and input line should both be fully matched
   return j === pattern.length;
 }
+
+// Ensure the first argument is "-E"
+if (args[2] !== "-E") {
+  console.log("Expected first argument to be '-E'");
+  process.exit(1);
+}
+
+// Debugging output (optional)
+console.log("Logs from your program will appear here!");
+
+// Check if the input line matches the pattern
+if (matchPattern(inputLine, pattern)) {
+  console.log('Pattern matched successfully!');
+  process.exit(0); // Success
+} else {
+  console.log('Pattern did not match.');
+  process.exit(1); // Failure
+}
+
 
 // Ensure the first argument is "-E"
 if (args[2] !== "-E") {
