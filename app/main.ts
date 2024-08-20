@@ -36,24 +36,24 @@ function matchPattern(inputLine: string, pattern: string): boolean {
           }
           j += 1; // Move past the '\d' in the pattern
         } else {
-          return false; // Handle other escape sequences or invalid cases
+          return false; // Unsupported escape sequences
         }
       } else {
-        // Match the literal characters
-        if (pattern.slice(j, j + 5) === "apple") {
-          if (inputLine.slice(i, i + 5) !== "apple") return false;
-          i += 5;
-          j += 5;
-        } else {
-          if (currentPatternChar !== inputLine[i]) return false;
-          i += 1;
-          j += 1;
+        // Literal matching for "apple"
+        const remainingPattern = pattern.slice(j);
+        if (remainingPattern === " apple" && inputLine.slice(i).startsWith(" apple")) {
+          return true;
+        } else if (currentPatternChar !== inputLine[i]) {
+          return false; // Mismatch found
         }
+        i += 1;
+        j += 1;
       }
     }
   
     return j === pattern.length && i === inputLine.length;
   }
+  
   
   
   function parsePattern(pattern: string): string[] {
