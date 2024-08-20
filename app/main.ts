@@ -34,23 +34,7 @@ function matchPattern(inputLine: string, pattern: string): boolean {
   return j === pattern.length;
 }
 
-// Ensure the first argument is "-E"
-if (args[2] !== "-E") {
-  console.log("Expected first argument to be '-E'");
-  process.exit(1);
-}
 
-// Debugging output (optional)
-console.log("Logs from your program will appear here!");
-
-// Check if the input line matches the pattern
-if (matchPattern(inputLine, pattern)) {
-  console.log('Pattern matched successfully!');
-  process.exit(0); // Success
-} else {
-  console.log('Pattern did not match.');
-  process.exit(1); // Failure
-}
 
 
 // Ensure the first argument is "-E"
