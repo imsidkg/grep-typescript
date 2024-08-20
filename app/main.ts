@@ -1,70 +1,50 @@
 const args = process.argv;
-const pattern = args[3];
+const pattern = args[3]; // The pattern provided as an argument
 
- export const inputLine: string = await Bun.stdin.text();
+export const inputLine: string = await Bun.stdin.text(); // Capture the input string
 
 function matchPattern(inputLine: string, pattern: string): boolean {
-  let i=0 ;
-  let j=0;
-  // if (pattern.length === 1) {
-  //   return inputLine.includes(pattern);
-  // }
-  // else if(pattern === "\\d"){
-  //   console.log('reched 1')
-  //   return /\d/g.test(inputLine)
-  //  }
-  //  else if (pattern === '\\w') {
-  //   console.log('reched 2')
-  //   return /\w/g.test(inputLine)
-  //  }
-  //  else if (pattern[0] === "[" && pattern[pattern.length - 1] === "]" && pattern[1] === "^") {
-  //    console.log('reched 4')
-  //    const negGroupChars = pattern.slice(2, pattern.length - 1); 
-  //    return !Array.from(negGroupChars).some((negGroupChar) => inputLine.includes(negGroupChar))
-  //   }
-  //   else if (pattern.startsWith('[') && pattern.endsWith(']')){
-  //    const chars = pattern.slice(0,pattern.length-1);
+  let i = 0, j = 0;
+  
+  while (i < inputLine.length && j < pattern.length) {
+    const currentPatternChar = pattern[j];
+
+    if (currentPatternChar === '\\') {
      
-  //    return Array.from(chars).some((char) => inputLine.includes(char))
-  //   }
-  while (i<inputLine.length && j<pattern.length-1) {
-    const currentPatternCharacter = pattern[j] ;
-     
-    if(currentPatternCharacter === '\\') {
-      const nextPatternCharacter = pattern[j+1];
-      if(nextPatternCharacter === 'd') {
-        if(!/\d/.test(inputLine[i])) return false
-        j+=2 ;
+      const nextPatternChar = pattern[j + 1];
+      if (nextPatternChar === 'd') {
+      
+        if (!/\d/.test(inputLine[i])) return false;
+        j += 2;
+      } else if (nextPatternChar === 'w') {
+    
+        if (!/\w/.test(inputLine[i])) return false;
+        j += 2; 
+      }
+    } else {
+      
+      if (currentPatternChar !== inputLine[i]) return false;
+      j += 1;
     }
-    else if(nextPatternCharacter === 'w') {
-      if(!/\w/.test(inputLine[i])) return false
-      j+=2;
-    }
-
-    }
-    else {
-      if(pattern[j] !== inputLine[i]) return false
-      j +=1;
-    }
-     i+=1;
-
-
+    i += 1;
   }
-  return i === inputLine.length && j == pattern.length;
- 
+
+
+  return i === inputLine.length && j === pattern.length;
 }
 
+// Ensure the first argument is "-E"
 if (args[2] !== "-E") {
   console.log("Expected first argument to be '-E'");
   process.exit(1);
 }
 
+// Debugging output (optional)
 console.log("Logs from your program will appear here!");
 
-// Uncomment this block to pass the first stage
+// Check if the input line matches the pattern
 if (matchPattern(inputLine, pattern)) {
-  process.exit(0);
+  process.exit(0); // Success, pattern matches
 } else {
-  process.exit(1);
+  process.exit(1); // Failure, pattern does not match
 }
-  
