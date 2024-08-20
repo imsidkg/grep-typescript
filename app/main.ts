@@ -17,7 +17,6 @@ function matchPattern(inputLine: string, pattern: string): boolean {
     const chars = pattern.slice(0,pattern.length-1);
     return Array.from(chars).some((char) => inputLine.includes(char))
    }
- 
    else if (pattern[0] === "[" && pattern[pattern.length - 1] === "]" && pattern[1] === "^") {
     const negGroupChars = pattern.slice(2, pattern.length - 1); // Extract characters after ^ and before ]
     
@@ -28,7 +27,8 @@ function matchPattern(inputLine: string, pattern: string): boolean {
       }
     }
     return false; // All characters are in the group, return false
-  }
+}
+
   else {
     throw new Error(`Unhandled pattern: ${pattern}`);
   }
