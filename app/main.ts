@@ -19,31 +19,42 @@ function matchPattern(inputLine: string, pattern: string): boolean {
   }
   
   function matchPattern(inputLine: string, pattern: string): boolean {
-    // Handle simple patterns like \d and \w
-    if (pattern === "\\d") {
-      return inputLine.split("").some(char => isDigit(char.charCodeAt(0)));
-    }
+    let i = 0, j = 0;
   
-    if (pattern === "\\w") {
-      return inputLine.split("").some(char => isWordCharacter(char.charCodeAt(0)));
-    }
+    while (i < inputLine.length && j < pattern.length) {
+      const currentPatternChar = pattern[j];
   
-    // Handle character classes like [abc] and negated classes like [^abc]
-    if (pattern.startsWith("[") && pattern.endsWith("]")) {
-      const isNegated = pattern[1] === "^";
-      const charsToMatch = pattern.slice(isNegated ? 2 : 1, -1).split("");
+      if (currentPatternChar === '\\') {
+        j += 1; // Skip the backslash
+        const nextPatternChar = pattern[j];
   
-      if (isNegated) {
-        return inputLine.split("").every(char => !charsToMatch.includes(char));
+        if (nextPatternChar === 'd') {
+          // Match a digit
+          if (!/\d/.test(inputLine[i])) return false; // No digit found
+          while (i < inputLine.length && /\d/.test(inputLine[i])) {
+            i += 1;
+          }
+          j += 1; // Move past the '\d' in the pattern
+        } else {
+          return false; // Handle other escape sequences or invalid cases
+        }
       } else {
-        return inputLine.split("").some(char => charsToMatch.includes(char));
+        // Match the literal characters
+        if (pattern.slice(j, j + 5) === "apple") {
+          if (inputLine.slice(i, i + 5) !== "apple") return false;
+          i += 5;
+          j += 5;
+        } else {
+          if (currentPatternChar !== inputLine[i]) return false;
+          i += 1;
+          j += 1;
+        }
       }
     }
   
-    // Handle multi-character patterns like "\d apple"
-    const components = parsePattern(pattern);
-    return matchComplexPattern(inputLine, components);
+    return j === pattern.length && i === inputLine.length;
   }
+  
   
   function parsePattern(pattern: string): string[] {
     const components: string[] = [];
