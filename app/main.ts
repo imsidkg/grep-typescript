@@ -18,7 +18,7 @@ function matchPattern(inputLine: string, pattern: string): boolean {
    else if (pattern[0] === "[" && pattern[pattern.length - 1] === "]" && pattern[1] === "^") {
      console.log('reched 4')
      const negGroupChars = pattern.slice(2, pattern.length - 1); // Extract characters after ^ and before ]
-     return Array.from(negGroupChars).some((negGroupChar) => inputLine.includes(negGroupChar))
+     return !Array.from(negGroupChars).some((negGroupChar) => inputLine.includes(negGroupChar))
     }
     else if (pattern.startsWith('[') && pattern.endsWith(']')){
      const chars = pattern.slice(0,pattern.length-1);
