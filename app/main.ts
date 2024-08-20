@@ -19,7 +19,7 @@ function matchPattern(inputLine: string, pattern: string): boolean {
    }
    else if(pattern[0]=="[" && pattern[pattern.length-1]=="]" &&  pattern[1]=="^"){
     const chars = pattern.slice(0,pattern.length-1);
-    console.log(chars);
+    console.log("reached here " ,chars);
     return true;
    }
   else {
