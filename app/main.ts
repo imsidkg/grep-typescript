@@ -18,17 +18,16 @@ function matchPattern(inputLine: string, pattern: string): boolean {
     return Array.from(chars).some((char) => inputLine.includes(char))
    }
  
-   else if(pattern[0]=="[" && pattern[pattern.length-1]=="]" &&  pattern[1]=="^"){
-    let values = new Map;
-    for(let i=2;i<pattern.length-1;i++){
-      values.set(pattern[i],i);
-    }
-    for(let x=0;x<inputLine.length;x++){
-      if(values.has(inputLine[x])){
-        return false;
+   else if (pattern[0] === "[" && pattern[pattern.length - 1] === "]" && pattern[1] === "^") {
+    const negGroupChars = pattern.slice(2, pattern.length - 1); // Extract characters after ^ and before ]
+    
+    // Check if any character in inputLine is NOT in the negative group
+    for (let x = 0; x < inputLine.length; x++) {
+      if (!negGroupChars.includes(inputLine[x])) {
+        return true; // Found a character not in the group, return true
       }
     }
-    return true;
+    return false; // All characters are in the group, return false
   }
   else {
     throw new Error(`Unhandled pattern: ${pattern}`);
