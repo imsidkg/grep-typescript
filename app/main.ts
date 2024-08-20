@@ -18,7 +18,7 @@ function matchPattern(inputLine: string, pattern: string): boolean {
     return Array.from(chars).some((char) => inputLine.includes(char))
    }
  
-   else if(pattern[0]=="[" && pattern[pattern.length-1]=="]" &&  pattern[1]=="^"){
+   else if(pattern.startsWith('[') && pattern.endsWith(']') && pattern.includes('^')){
      console.log("reached here checkpoint 2" );
     const chars = pattern.slice(0,pattern.length-1);
     return true;
