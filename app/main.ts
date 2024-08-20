@@ -1,124 +1,106 @@
-// const args = process.argv;
-// const pattern = args[3]; // The pattern provided as an argument
-
-// export const inputLine: string = await Bun.stdin.text(); // Capture the input string
-// function matchPattern(inputLine: string, pattern: string): boolean {
-//   let i = 0, j = 0;
-
-//   while (i < inputLine.length && j < pattern.length) {
-//     const currentPatternChar = pattern[j];
-//     console.log(`Checking pattern character: ${currentPatternChar}, input character: ${inputLine[i]}`);
-
-//     if (currentPatternChar === '\\') {
-//       j += 1; // Skip the backslash
-//       const nextPatternChar = pattern[j];
-
-//       if (nextPatternChar === 'd') {
-//         console.log('Matching digit...');
-//         let digitStart = i;
-//         while (i < inputLine.length && /\d/.test(inputLine[i])) {
-//           i += 1;
-//         }
-//         if (digitStart === i) return false; // No digit found
-//         j += 1; // Move past the digit part of the pattern
-//       } else if (nextPatternChar === 'w') {
-//         console.log('Matching word character...');
-//         let wordStart = i;
-//         while (i < inputLine.length && /\w/.test(inputLine[i])) {
-//           i += 1;
-//         }
-//         if (wordStart === i) return false; // No word character found
-//         j += 1; // Move past the word character part of the pattern
-//       } else if (nextPatternChar === ' ') {
-//         console.log('Matching space character...');
-//         while (i < inputLine.length && inputLine[i] === ' ') {
-//           i += 1;
-//         }
-//         j += 1; // Move past the space character part of the pattern
-//       } else {
-//         // Handle unrecognized escape sequences
-//         console.log(`Unrecognized escape sequence: \\${nextPatternChar}`);
-//         return false;
-//       }
-//     } else {
-//       console.log(`Matching literal character: ${currentPatternChar}`);
-//       if (currentPatternChar !== inputLine[i]) return false; // Check if the current pattern character matches the input character
-//       i += 1; // Move to the next character in the input line
-//       j += 1; // Move to the next character in the pattern
-//     }
-//   }
-
-//   // Ensure both pattern and input line are fully matched
-//   return j === pattern.length && i === inputLine.length;
-// }
-
-
-
-// // Ensure the first argument is "-E"
-// if (args[2] !== "-E") {
-//   console.log("Expected first argument to be '-E'");
-//   process.exit(1);
-// }
-
-// // Debugging output (optional)
-// console.log("Logs from your program will appear here!");
-
-// // Check if the input line matches the pattern
-// if (matchPattern(inputLine, pattern)) {
-//   process.exit(0); // Success, pattern matches
-// } else {
-//   process.exit(1); // Failure, pattern does not match
-// }
-
-
-
-
-
-
-
-
-
-
-
 const args = process.argv;
 const pattern = args[3]; // The pattern provided as an argument
 
-// Capture the input string
-export const inputLine: string = await Bun.stdin.text();
-
+export const inputLine: string = await Bun.stdin.text(); // Capture the input string
 function matchPattern(inputLine: string, pattern: string): boolean {
   let i = 0, j = 0;
 
-  while (i < inputLine.length && j < pattern.length) {
-    const currentPatternChar = pattern[j];
-
-    if (currentPatternChar === '\\') {
-      j += 1; // Move past the backslash
-      const nextPatternChar = pattern[j];
-
-      if (nextPatternChar === 'd') {
-        if (!/\d/.test(inputLine[i])) return false; // Match a digit
-        while (i < inputLine.length && /\d/.test(inputLine[i])) i += 1;
-      } else if (nextPatternChar === 'w') {
-        if (!/\w/.test(inputLine[i])) return false; // Match a word character
-        while (i < inputLine.length && /\w/.test(inputLine[i])) i += 1;
-      } else if (nextPatternChar === ' ') {
-        while (i < inputLine.length && inputLine[i] === ' ') i += 1; // Match spaces
+  function isWordCharacter(ascii: number): boolean {
+    return (
+      (ascii >= 48 && ascii <= 57) || // digits 0-9
+      (ascii >= 65 && ascii <= 90) || // uppercase A-Z
+      (ascii >= 97 && ascii <= 122) || // lowercase a-z
+      ascii === 95 // underscore _
+    );
+  }
+  
+  function isDigit(ascii: number): boolean {
+    return ascii >= 48 && ascii <= 57; // digits 0-9
+  }
+  
+  function matchPattern(inputLine: string, pattern: string): boolean {
+    // Handle simple patterns like \d and \w
+    if (pattern === "\\d") {
+      return inputLine.split("").some(char => isDigit(char.charCodeAt(0)));
+    }
+  
+    if (pattern === "\\w") {
+      return inputLine.split("").some(char => isWordCharacter(char.charCodeAt(0)));
+    }
+  
+    // Handle character classes like [abc] and negated classes like [^abc]
+    if (pattern.startsWith("[") && pattern.endsWith("]")) {
+      const isNegated = pattern[1] === "^";
+      const charsToMatch = pattern.slice(isNegated ? 2 : 1, -1).split("");
+  
+      if (isNegated) {
+        return inputLine.split("").every(char => !charsToMatch.includes(char));
       } else {
-        return false; // Unrecognized escape sequence
+        return inputLine.split("").some(char => charsToMatch.includes(char));
       }
-
-      j += 1; // Move past the escaped character
-    } else {
-      if (currentPatternChar !== inputLine[i]) return false; // Match a literal character
-      i += 1; // Move to the next character in the input line
-      j += 1; // Move to the next character in the pattern
+    }
+  
+    // Handle multi-character patterns like "\d apple"
+    const components = parsePattern(pattern);
+    return matchComplexPattern(inputLine, components);
+  }
+  
+  function parsePattern(pattern: string): string[] {
+    const components: string[] = [];
+    for (let i = 0; i < pattern.length; i++) {
+      if (pattern[i] === "\\") {
+        components.push(pattern.slice(i, i + 2)); // capture \d, \w, etc.
+        i++;
+      } else {
+        components.push(pattern[i]); // capture regular characters
+      }
+    }
+    return components;
+  }
+  
+  function matchComplexPattern(inputLine: string, components: string[]): boolean {
+    let compareIndex = 0;
+  
+    for (let i = 0; i < inputLine.length; i++) {
+      if (compareIndex === components.length) break;
+  
+      const currentComponent = components[compareIndex];
+      const ascii = inputLine.charCodeAt(i);
+  
+      if (currentComponent === "\\w") {
+        if (isWordCharacter(ascii)) {
+          compareIndex++;
+        } else {
+          resetPatternIndexIfNecessary(components, currentComponent, i, ascii);
+          compareIndex = 0;
+        }
+      } else if (currentComponent === "\\d") {
+        if (isDigit(ascii)) {
+          compareIndex++;
+        } else {
+          resetPatternIndexIfNecessary(components, currentComponent, i, ascii);
+          compareIndex = 0;
+        }
+      } else if (inputLine[i] === currentComponent) {
+        compareIndex++;
+      } else {
+        compareIndex = 0;
+      }
+    }
+  
+    return compareIndex === components.length;
+  }
+  
+  function resetPatternIndexIfNecessary(components: string[], currentComponent: string, i: number, ascii: number) {
+    if (currentComponent === "\\w" && !isWordCharacter(ascii)) {
+      i--;
+    }
+    if (currentComponent === "\\d" && !isDigit(ascii)) {
+      i--;
     }
   }
+  
 
-  // Ensure the entire pattern and input line are matched
-  return j === pattern.length && i === inputLine.length;
-}
 
 // Ensure the first argument is "-E"
 if (args[2] !== "-E") {
@@ -135,6 +117,4 @@ if (matchPattern(inputLine, pattern)) {
 } else {
   process.exit(1); // Failure, pattern does not match
 }
-
-
-
+}
