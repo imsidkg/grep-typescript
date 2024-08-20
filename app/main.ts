@@ -8,18 +8,23 @@ function matchPattern(inputLine: string, pattern: string): boolean {
   
   while (i < inputLine.length && j < pattern.length) {
     const currentPatternChar = pattern[j];
+    console.log('reached 1')
 
     if (currentPatternChar === '\\') {
+      console.log('reached 2')
       const nextPatternChar = pattern[j + 1];
 
       if (nextPatternChar === 'd') {
+        console.log('reached 3')
         if (!/\d/.test(inputLine[i])) return false;
         j += 2; // Move past the \ and the d in the pattern
       } else if (nextPatternChar === 'w') {
+        console.log('reached 4')
         if (!/\w/.test(inputLine[i])) return false;
         j += 2; // Move past the \ and the w in the pattern
       }
     } else {
+      console.log('reached 5')
       if (currentPatternChar !== inputLine[i]) return false;
       j += 1; // Move to the next character in the pattern
     }
