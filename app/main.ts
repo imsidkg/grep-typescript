@@ -18,11 +18,18 @@ function matchPattern(inputLine: string, pattern: string): boolean {
     return Array.from(chars).some((char) => inputLine.includes(char))
    }
  
-   else if(pattern.startsWith('[') && pattern.endsWith(']') && pattern.includes('^')){
-     console.log("reached here checkpoint 2" );
-    const chars = pattern.slice(0,pattern.length-1);
+   else if(pattern[0]=="[" && pattern[pattern.length-1]=="]" &&  pattern[1]=="^"){
+    let values = new Map;
+    for(let i=2;i<pattern.length-1;i++){
+      values.set(pattern[i],i);
+    }
+    for(let x=0;x<inputLine.length;x++){
+      if(values.has(inputLine[x])){
+        return false;
+      }
+    }
     return true;
-   }
+  }
   else {
     throw new Error(`Unhandled pattern: ${pattern}`);
   }
