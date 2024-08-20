@@ -15,20 +15,19 @@ function matchPattern(inputLine: string, pattern: string): boolean {
 
       if (nextPatternChar === 'd') {
         console.log('Matching digit...');
-        let digitStart = i;
-        while (i < inputLine.length && /\d/.test(inputLine[i])) {
-          i += 1;
-        }
-        if (digitStart === i) return false; // No digit found
+        if (!/\d/.test(inputLine[i])) return false; // Check if current input character is a digit
+        i += 1; // Move to the next character in the input line
         j += 1; // Move past the digit part of the pattern
       } else if (nextPatternChar === 'w') {
         console.log('Matching word character...');
-        let wordStart = i;
-        while (i < inputLine.length && /\w/.test(inputLine[i])) {
-          i += 1;
-        }
-        if (wordStart === i) return false; // No word character found
+        if (!/\w/.test(inputLine[i])) return false; // Check if current input character is a word character
+        i += 1; // Move to the next character in the input line
         j += 1; // Move past the word character part of the pattern
+      } else if (nextPatternChar === ' ') {
+        console.log('Matching space character...');
+        if (inputLine[i] !== ' ') return false; // Check if current input character is a space
+        i += 1; // Move to the next character in the input line
+        j += 2; // Move past the space character part of the pattern
       } else {
         // Handle unrecognized escape sequences
         console.log(`Unrecognized escape sequence: \\${nextPatternChar}`);
@@ -45,8 +44,6 @@ function matchPattern(inputLine: string, pattern: string): boolean {
   // Ensure both pattern and input line are fully matched
   return j === pattern.length && i === inputLine.length;
 }
-
-
 
 
 // Ensure the first argument is "-E"
