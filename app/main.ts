@@ -8,16 +8,20 @@ function matchPattern(inputLine: string, pattern: string): boolean {
     return inputLine.includes(pattern);
   }
   else if(pattern === "\\d"){
+    console.log('reched 1')
     return /\d/g.test(inputLine)
    }
    else if (pattern === '\\w') {
+    console.log('reched 2')
     return /\w/g.test(inputLine)
    }
    else if (pattern.startsWith('[') && pattern.endsWith(']')){
     const chars = pattern.slice(0,pattern.length-1);
+    console.log('reched 3')
     return Array.from(chars).some((char) => inputLine.includes(char))
    }
    else if (pattern[0] === "[" && pattern[pattern.length - 1] === "]" && pattern[1] === "^") {
+    console.log('reched 4')
     const negGroupChars = pattern.slice(2, pattern.length - 1); // Extract characters after ^ and before ]
     
     // Check if any character in inputLine is NOT in the negative group
