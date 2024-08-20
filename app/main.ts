@@ -30,7 +30,7 @@ function matchPattern(inputLine: string, pattern: string): boolean {
   while (i<inputLine.length && j<pattern.length-1) {
     const currentPatternCharacter = pattern[j] ;
      
-    if(currentPatternCharacter === '//') {
+    if(currentPatternCharacter === '\\') {
       const nextPatternCharacter = pattern[j+1];
       if(nextPatternCharacter === 'd') {
         if(!/\d/.test(inputLine[i])) return false
