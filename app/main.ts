@@ -17,9 +17,10 @@ function matchPattern(inputLine: string, pattern: string): boolean {
     const chars = pattern.slice(0,pattern.length-1);
     return Array.from(chars).some((char) => inputLine.includes(char))
    }
+ 
    else if(pattern[0]=="[" && pattern[pattern.length-1]=="]" &&  pattern[1]=="^"){
+     console.log("reached here checkpoint 2" );
     const chars = pattern.slice(0,pattern.length-1);
-    console.log("reached here " ,chars);
     return true;
    }
   else {
